@@ -1,5 +1,4 @@
-# HigherOrderClustering:
-#
+# HigherOrderClustering:<br/>
 # higher-order clustering coefficients for networks
 
 [![Build Status](https://travis-ci.org/arbenson/HigherOrderClustering.jl.svg?branch=master)](https://travis-ci.org/arbenson/HigherOrderClustering.jl)
