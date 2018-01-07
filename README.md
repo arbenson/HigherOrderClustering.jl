@@ -1,4 +1,6 @@
-# HigherOrderClustering: higher-order clustering coefficients for networks
+# HigherOrderClustering:
+#
+# higher-order clustering coefficients for networks
 
 [![Build Status](https://travis-ci.org/arbenson/HigherOrderClustering.jl.svg?branch=master)](https://travis-ci.org/arbenson/HigherOrderClustering.jl)
 
@@ -54,9 +56,9 @@ ccfs.avg_hoccf2 ≈ mean(ccfs.local_hoccfs)  # should be true
 
 As the order of the clustering coefficient increases, the number of nodes
 that are not at the center of at least one wedge can only go up. This is
-something to keep in mind for analysis. In addition to reporting the clustering,
-it always useful to list fraction of nodes that are in at least one wedge.
-This is about 93% of the nodes in C. elegans for the third-order clustering coefficient:
+something to keep in mind for analysis. When analyzing higher-order clustering,
+it is always useful to report the fraction of nodes that are in at least one wedge.
+This is about 93% for the third-order clustering coefficient in C. elegans.
 ```
 sum(ccfs.ho_wedge_counts .> 0) / length(ccfs.ho_wedge_counts)
 ```
