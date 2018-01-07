@@ -39,6 +39,40 @@ ccfs.avg_hoccf
 ccfs.local_hoccfs
 ```
 
+A "zero" value for the local clustering coefficient can mean two things. Either
+(i) the node is at the center of at least one higher-order wedge and none of
+them close or (ii) the node is not at the center of a wedge.  Note that the
+field value avg_hoccf does not count latter case in its mean.  It is easy to
+find the nodes in the latter case because the data structure also returns the
+wedge counts.
+```
+find(ccfs.ho_wedge_counts .== 0)
+```
+
+The returned data structure also includes the average clustering coefficient
+that considers nodes not participating in any wedges to have "0 clustering".
+```
+ccfs.avg_hoccf2
+ccfs.avg_hoccf2 ≈ mean(ccfs.local_hoccfs)  # should be true
+```
+
+As the order of the clustering coefficient increases, the number of nodes
+that are not at the center of at least one wedge can only go up. This is
+something to keep in mind for analysis. In addition to reporting the clustering,
+it always useful to list fraction of nodes that are in at least one wedge.
+This is about 93% of the nodes in C. elegans for the third-order clustering coefficient:
+```
+sum(ccfs.ho_wedge_counts .> 0) / length(ccfs.ho_wedge_counts)
+```
+
+I recommend this paper by Marcus Kaiser that discusses the issue of nodes that do not participate
+in wedges (the analysis is for the classical clustering coefficient, so this set of nodes are
+isolated nodes and leafs):
+
+- Marcus Kaiser. [Mean clustering coefficients: the role of isolated nodes and leafs on clustering measures for small-world networks](http://iopscience.iop.org/article/10.1088/1367-2630/10/8/083042). New Journal of Physics 10.8 (2008): 083042.
+
+
+
 #### Clique counting in arxiv-AstroPh
 ```
 A = load_example_data("arxiv-AstroPh.txt")
