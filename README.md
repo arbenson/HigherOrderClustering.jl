@@ -1,7 +1,5 @@
 # HigherOrderClustering: higher-order clustering coefficients for networks
 
-[![Build Status](https://travis-ci.org/arbenson/HigherOrderClustering.jl.svg?branch=master)](https://travis-ci.org/arbenson/HigherOrderClustering.jl)
-
 This package provides an interface to compute "higher-order clustering
 coefficients" in networks, an idea developed in the paper
 
@@ -15,7 +13,7 @@ for this task. The package also has an interface for clique counting with this a
 ## Installation
 From Julia
 ```
-Pkg.add("HigherOrderClustering")
+Pkg.clone("https://github.com/arbenson/HigherOrderClustering.jl.git")
 Pkg.test("HigherOrderClustering")
 using HigherOrderClustering
 ```
