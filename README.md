@@ -3,7 +3,7 @@
 This package provides an interface to compute "higher-order clustering
 coefficients" in networks, an idea developed in the paper
 
-- Hao Yin, Austin R. Benson, and Jure Leskovec. Higher-order clustering in networks. [arXiv:1704.03913](https://arxiv.org/abs/1704.03913), 2017.
+- Hao Yin, Austin R. Benson, and Jure Leskovec. Higher-order clustering in networks. [arXiv:1704.03913](https://arxiv.org/abs/1704.03913), 2018.
 
 The key computational kernel for
 higher-order clustering coefficients is clique enumeration. We use the
