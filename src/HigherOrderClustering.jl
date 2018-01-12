@@ -67,6 +67,7 @@ l::Int64
 function higher_order_ccfs(A::SparseMatrixCSC{Int64,Int64}, l::Int64)
     A = min.(A, 1)
     A -= spdiagm(diag(A))
+    n = size(A, 1)
     # Get clique counts
     clique_counts1 = kcliques(A, l)
     clique_counts2 = kcliques(A, l + 1)
