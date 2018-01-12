@@ -1,6 +1,8 @@
 using MatrixNetworks
 
 function _kcliques(A::SparseMatrixCSC{Int64,Int64}, k::Int64)
+    A = min.(A, 1)
+    A -= spdiagm(diag(A))    
     # "global" variables for the recursive algorithm
     n = size(A, 2)
     adjacency_lists = Vector{Vector{Int64}}(n)
@@ -139,6 +141,8 @@ Returns a vector c, where c[v] is the number of k-cliques containing node v
 in the graph.
 """
 function kcliques(A::SparseMatrixCSC{Int64,Int64}, k::Int64)
+    A = min.(A, 1)
+    A -= spdiagm(diag(A))
     clique_counts = zeros(Int64, size(A, 1))
     (d, rt) = corenums(A)
     inds = find(d .>= (k - 1))

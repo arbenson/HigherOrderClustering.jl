@@ -65,7 +65,8 @@ l::Int64
     The order of the clustering coefficient (l = 2 is the classical definition).
 """
 function higher_order_ccfs(A::SparseMatrixCSC{Int64,Int64}, l::Int64)
-    n = size(A, 2)
+    A = min.(A, 1)
+    A -= spdiagm(diag(A))
     # Get clique counts
     clique_counts1 = kcliques(A, l)
     clique_counts2 = kcliques(A, l + 1)
