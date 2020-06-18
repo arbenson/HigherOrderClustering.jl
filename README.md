@@ -9,9 +9,7 @@ The key computational kernel for higher-order clustering coefficients is clique 
 ## Installation
 From Julia
 ```julia
-Pkg.add("HigherOrderClustering")
-Pkg.test("HigherOrderClustering")
-using HigherOrderClustering
+] add https://github.com/000Justin000/GraphSAGE
 ```
 
 ## Examples
