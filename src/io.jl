@@ -60,6 +60,6 @@ function load_example_data(filename::AbstractString)
     pathname = joinpath(dirname(dirname(@__FILE__)), "data")
     filename = joinpath(pathname, filename)
     if   isfile(filename); return read_undir_graph_txt(filename, true)[1]
-    else error(@sprintf("Could not find file %s", name))
+    else error("Could not find file $name")
     end
 end

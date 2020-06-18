@@ -1,5 +1,7 @@
 module HigherOrderClustering
 
+using SparseArrays
+
 export hoccf_data, higher_order_ccfs, kcliques
 export read_undir_graph_txt, load_example_data
 
@@ -41,7 +43,7 @@ clique_counts::Vector{Int64}
     Clique counts of nodes: clique_counts[v] is the number of k-cliques containing
     node v where k = order + 1.
 """
-immutable hoccf_data
+struct hoccf_data
     order::Int64
     global_hoccf::Float64
     avg_hoccf::Float64
@@ -66,12 +68,12 @@ l::Int64
 """
 function higher_order_ccfs(A::SparseMatrixCSC{Int64,Int64}, l::Int64)
     A = min.(A, 1)
-    A -= spdiagm(diag(A))
+    A -= Diagonal(A)
     n = size(A, 1)
     # Get clique counts
     clique_counts1 = kcliques(A, l)
     clique_counts2 = kcliques(A, l + 1)
-    degs = vec(sum(A, 2))
+    degs = vec(sum(A, dims=2))
     # normalize
     wedge_counts = (degs - l + 1) .* clique_counts1
     nz_inds = find(wedge_counts .> 0)

@@ -107,7 +107,7 @@ function _kcliques(A::SparseMatrixCSC{Int64,Int64}, k::Int64)
         
         for (ind, v) in enumerate(nodes_to_process(U, r))
             if r == k
-                print(@sprintf("%d of %d (%d-cliques) \r", ind, length(U), r))
+                print("$ind of $(length(U)) ($r-cliques) \r")
                 flush(STDOUT)
                 if ind == length(U); println(""); end
             end
@@ -142,7 +142,7 @@ in the graph.
 """
 function kcliques(A::SparseMatrixCSC{Int64,Int64}, k::Int64)
     A = min.(A, 1)
-    A -= spdiagm(diag(A))
+    A -= Diagonal(A)
     clique_counts = zeros(Int64, size(A, 1))
     (d, rt) = corenums(A)
     inds = find(d .>= (k - 1))
