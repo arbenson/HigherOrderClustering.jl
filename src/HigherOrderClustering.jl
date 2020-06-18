@@ -1,6 +1,8 @@
 module HigherOrderClustering
 
+using LinearAlgebra
 using SparseArrays
+using StatsBase
 
 export hoccf_data, higher_order_ccfs, kcliques
 export read_undir_graph_txt, load_example_data
@@ -75,11 +77,11 @@ function higher_order_ccfs(A::SparseMatrixCSC{Int64,Int64}, l::Int64)
     clique_counts2 = kcliques(A, l + 1)
     degs = vec(sum(A, dims=2))
     # normalize
-    wedge_counts = (degs - l + 1) .* clique_counts1
-    nz_inds = find(wedge_counts .> 0)
+    wedge_counts = (degs .- l .+ 1) .* clique_counts1
+    nz_inds = findall(wedge_counts .> 0)
     local_hoccfs = zeros(Float64, n)
-    local_hoccfs[nz_inds] = l * clique_counts2[nz_inds] ./ wedge_counts[nz_inds]
-    return hoccf_data(l, l * sum(clique_counts2) / sum(wedge_counts),
+    local_hoccfs[nz_inds] = l .* clique_counts2[nz_inds] ./ wedge_counts[nz_inds]
+    return hoccf_data(l, l .* sum(clique_counts2) / sum(wedge_counts),
                       mean(local_hoccfs[nz_inds]), mean(local_hoccfs),
                       local_hoccfs, wedge_counts, clique_counts2)
 end

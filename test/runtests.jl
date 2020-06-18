@@ -1,6 +1,8 @@
 using HigherOrderClustering
-using Base.Test
+using Test
 using Combinatorics
+using LinearAlgebra
+using SparseArrays
 
 function test1()
     I = [1, 1, 1, 2, 2, 3]
@@ -41,21 +43,21 @@ end
 function test2()
     # Test k-cliques on a small network
     A = load_example_data("celegans.txt")
-    degs = vec(sum(A, 2))
+    degs = vec(sum(A, dims=2))
     n = size(A, 2)
     deg_order = zeros(Int64, n)
-    deg_order[sortperm(vec(sum(A, 1)))] = collect(1:n)
+    deg_order[sortperm(degs)] = collect(1:n)
 
     function higher_neighbors(j::Int64)
         oj = deg_order[j]
-        nbrs = find(A[:, j])
+        nbrs = findnz(A[:, j])[1]
         return filter(x -> deg_order[x] > oj, nbrs)
     end
 
     counts = zeros(Int64, size(A, 2))
     for j = 1:n
         for w in higher_neighbors(j)
-            counts[[j, w]] += 1
+            counts[[j, w]] .+= 1
         end
     end
     counts == kcliques(A, 2)
@@ -64,7 +66,7 @@ function test2()
     for j = 1:n
         for (w, x) in combinations(higher_neighbors(j), 2)
             if A[w, x] > 0
-                counts[[j, w, x]] += 1
+                counts[[j, w, x]] .+= 1
             end
         end
     end
@@ -74,7 +76,7 @@ function test2()
     for j = 1:n
         for (w, x, y) in combinations(higher_neighbors(j), 3)
             if A[w, x] > 0 && A[w, y] > 0 && A[x, y] > 0
-                counts[[j, w, x, y]] += 1
+                counts[[j, w, x, y]] .+= 1
             end
         end
     end
@@ -85,7 +87,7 @@ function test2()
         for (w, x, y, z) in combinations(higher_neighbors(j), 4)
             if A[w, x] > 0 && A[w, y] > 0 && A[x, y] > 0 &&
                 A[w, z] > 0 && A[x, z] > 0 && A[y, z] > 0
-                counts[[j, w, x, y, z]] += 1                
+                counts[[j, w, x, y, z]] .+= 1                
             end
         end
     end

@@ -2,12 +2,12 @@ using MatrixNetworks
 
 function _kcliques(A::SparseMatrixCSC{Int64,Int64}, k::Int64)
     A = min.(A, 1)
-    A -= spdiagm(diag(A))    
+    A -= Diagonal(A)
     # "global" variables for the recursive algorithm
     n = size(A, 2)
-    adjacency_lists = Vector{Vector{Int64}}(n)
+    adjacency_lists = Vector{Vector{Int64}}()
     for v = 1:n
-        adjacency_lists[v] = filter(x -> x != v, find(A[:, v]))
+        push!(adjacency_lists, filter(x -> x != v, findnz(A[:, v])[1]))
     end
     C = Int64[]
     labels = k * ones(Int64, n)
@@ -94,7 +94,7 @@ function _kcliques(A::SparseMatrixCSC{Int64,Int64}, k::Int64)
             counts[v] += v_cnt
             C_cnt += v_cnt
         end
-        counts[C] += C_cnt
+        counts[C] .+= C_cnt
     end
 
     # Recursive algorithm of Chiba and Nishizeki.
@@ -108,12 +108,12 @@ function _kcliques(A::SparseMatrixCSC{Int64,Int64}, k::Int64)
         for (ind, v) in enumerate(nodes_to_process(U, r))
             if r == k
                 print("$ind of $(length(U)) ($r-cliques) \r")
-                flush(STDOUT)
+                flush(stdout)
                 if ind == length(U); println(""); end
             end
             # Get neighborhood of v
             Up = neighbors(v, r)
-            labels[Up] = r - 1
+            labels[Up] .= r - 1
             move_front(Up, r - 1)
 
             # Recurse on neighborhood of node v
@@ -122,7 +122,7 @@ function _kcliques(A::SparseMatrixCSC{Int64,Int64}, k::Int64)
             pop!(C)
 
             # Restore neighborhood
-            labels[Up] = r
+            labels[Up] .= r
 
             # Eliminate v
             labels[v] = r + 1
@@ -130,7 +130,7 @@ function _kcliques(A::SparseMatrixCSC{Int64,Int64}, k::Int64)
         end
     end
 
-    rcliques(find(vec(sum(A, 2)) .>= (k - 1)), k)
+    rcliques(findall(vec(sum(A, dims=2)) .>= (k - 1)), k)
     return counts
 end
 
@@ -145,7 +145,7 @@ function kcliques(A::SparseMatrixCSC{Int64,Int64}, k::Int64)
     A -= Diagonal(A)
     clique_counts = zeros(Int64, size(A, 1))
     (d, rt) = corenums(A)
-    inds = find(d .>= (k - 1))
+    inds = findall(d .>= (k - 1))
     counts = _kcliques(A[inds, inds], k)
     clique_counts[inds] = counts
     return clique_counts
