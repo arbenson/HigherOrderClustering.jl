@@ -31,11 +31,12 @@ ccfs.local_hoccfs
 
 A "zero" value for the local clustering coefficient can mean two things. Either (i) the node is at the center of at least one higher-order wedge and none of them close or (ii) the node is not at the center of a wedge.  The field value avg_hoccf does not count the latter case in its mean.  It is easy to find the nodes in the latter case because the data structure also returns the wedge counts.
 ```julia
-find(ccfs.ho_wedge_counts .== 0)
+findall(ccfs.ho_wedge_counts .== 0)
 ```
 
 The returned data structure also includes the average clustering coefficient that considers nodes not participating in any wedges to have "0 clustering".
 ```julia
+using StatsBase
 ccfs.avg_hoccf2
 ccfs.avg_hoccf2 ≈ mean(ccfs.local_hoccfs)  # should be true
 ```
@@ -56,7 +57,7 @@ I recommend this paper by Marcus Kaiser that discusses the issue of nodes that d
 A = load_example_data("arxiv-AstroPh.txt")
 cliques3 = kcliques(A, 3)
 cliques4 = kcliques(A, 4)
-mean(cliques4), std(cliques4)
+mean(cliques4)
 cliques5 = kcliques(A, 5)
 ```
 Note that the reported progress will be slower for the first nodes that are processed.
